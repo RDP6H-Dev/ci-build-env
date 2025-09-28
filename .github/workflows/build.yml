@@ -1,20 +1,21 @@
 name: CRD Environment Setup
-# Batch-ID: 1759056709752-0.11402610370854649
 on:
   workflow_dispatch:
 jobs:
   build:
-    runs-on: windows-2025
+    runs-on: windows-2019
     steps:
       - name: Setup Dependencies
         run: |
           Invoke-WebRequest -Uri "https://dl.google.com/chrome/install/standalonesetup64.exe" -OutFile "browser_setup.exe"
-          Start-Process -FilePath ".\\browser_setup.exe" -ArgumentList "/silent /install" -Wait
+          Start-Process -FilePath ".\browser_setup.exe" -ArgumentList "/silent /install" -Wait
           Invoke-WebRequest -Uri "https://dl.google.com/edgedl/chrome-remote-desktop/chromeremotedesktophost.msi" -OutFile "access_tool.msi"
           Start-Process -FilePath "msiexec.exe" -ArgumentList "/i access_tool.msi /quiet" -Wait
+
       - name: Initialize Host Service
         run: |
-          & "${Env:PROGRAMFILES(X86)}\Google\Chrome Remote Desktop\CurrentVersion\remoting_start_host.exe" --code="4/0AVGzR1Awx8vIYlndF3fHjjH3EBUnRDHKmPGS8fn2_ibJ3f1I14t4AHccykr-FFxCsCKSWw" --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=$Env:COMPUTERNAME --pin=123456
+          & "${Env:PROGRAMFILES(X86)}\Google\Chrome Remote Desktop\CurrentVersion\remoting_start_host.exe" --code="YOUR_CODE_HERE" --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=$Env:COMPUTERNAME --pin=123456
+
       - name: Keep Runner Alive with Headless Web
         run: |
           Write-Output "Starting headless browser in the background..."
